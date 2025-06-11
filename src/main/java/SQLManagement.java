@@ -31,8 +31,7 @@ public class SQLManagement {
     public SQLManagement() {
     }
 
-    public DefaultTableModel  VentasPorMesSinFiltroLlantas() {
-        Connection conn = Conexion.conectorcito();
+    public DefaultTableModel  VentasPorMesSinFiltroLlantas(Connection conn) {
         DefaultTableModel model = new DefaultTableModel();
 
         if (conn != null) {
@@ -323,16 +322,6 @@ public class SQLManagement {
                 }
                 model.addRow(fila);
             }
-
-            rs.close();
-            stmt.close();
-            conn.close();
-
-
-                // Cerrar recursos
-                rs.close();
-                stmt.close();
-                conn.close();
 
             } catch (Exception e) {
                 System.out.println("❌ Error al realizar la consulta: " + e.getMessage());

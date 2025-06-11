@@ -1,7 +1,15 @@
 
+//import java.awt.List;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingWorker;
+import javax.swing.table.DefaultTableModel;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -36,8 +44,11 @@ public class main extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
+        jProgressBar1 = new javax.swing.JProgressBar();
         jPanel1 = new javax.swing.JPanel();
         Iniciar = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         Principal.setPreferredSize(new java.awt.Dimension(1047, 540));
 
@@ -57,7 +68,7 @@ public class main extends javax.swing.JFrame {
             }
         });
         PanelPrincipal.add(jButton1);
-        jButton1.setBounds(30, 40, 159, 43);
+        jButton1.setBounds(30, 40, 220, 43);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -77,7 +88,9 @@ public class main extends javax.swing.JFrame {
 
         jButton2.setText("Filtrar Por Marca");
         PanelPrincipal.add(jButton2);
-        jButton2.setBounds(200, 40, 120, 40);
+        jButton2.setBounds(260, 40, 120, 40);
+        PanelPrincipal.add(jProgressBar1);
+        jProgressBar1.setBounds(390, 40, 146, 40);
 
         javax.swing.GroupLayout PrincipalLayout = new javax.swing.GroupLayout(Principal.getContentPane());
         Principal.getContentPane().setLayout(PrincipalLayout);
@@ -95,6 +108,7 @@ public class main extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(232, 237, 201));
         jPanel1.setLayout(null);
 
+        Iniciar.setFont(new java.awt.Font("Cambria", 1, 18)); // NOI18N
         Iniciar.setText("Iniciar");
         Iniciar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -102,7 +116,16 @@ public class main extends javax.swing.JFrame {
             }
         });
         jPanel1.add(Iniciar);
-        Iniciar.setBounds(400, 430, 140, 50);
+        Iniciar.setBounds(500, 430, 140, 50);
+
+        jLabel1.setFont(new java.awt.Font("Cambria Math", 1, 70)); // NOI18N
+        jLabel1.setText("Bienvenido");
+        jPanel1.add(jLabel1);
+        jLabel1.setBounds(360, 60, 400, 60);
+
+        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\Osmin Tovar\\Documents\\NetBeansProjects\\segundoProyecto\\src\\main\\resources\\imagenes\\logo-ferco-nuevo-slogan.png")); // NOI18N
+        jPanel1.add(jLabel2);
+        jLabel2.setBounds(180, 110, 690, 300);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -119,8 +142,76 @@ public class main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        // TODO add your handling code here:
-        jTable1.setModel(gestor.VentasPorMesSinFiltroLlantas());
+        SwingWorker<DefaultTableModel, Integer> worker = new SwingWorker<DefaultTableModel, Integer>() {
+            @Override
+            protected DefaultTableModel doInBackground() throws Exception {
+                // Hilo para simular progreso
+                Thread progressThread = new Thread(() -> {
+                    try {
+                        int progreso = 0;
+                        while (!Thread.currentThread().isInterrupted()) {
+                            publish(progreso);
+                            progreso += 1;
+                            if (progreso > 100) {
+                                progreso = 0;  // Si quieres que la barra se reinicie
+                            }
+                            Thread.sleep(100); // cada 100 ms
+                        }
+                    } catch (InterruptedException e) {
+                        // Thread interrumpido, salir
+                    }
+                });
+
+                progressThread.start();
+
+                // Aquí haces la conexión y la consulta real
+                gestor = new SQLManagement();
+                conn = gestor.conect();
+
+                DefaultTableModel model = null;
+                if (conn != null) {
+                    model = gestor.VentasPorMesSinFiltroLlantas(conn);
+                    conn.close();
+                }
+
+                // Termina el hilo del progreso
+                progressThread.interrupt();
+                progressThread.join();
+
+                // Asegura que la barra quede llena al 100% al terminar
+                publish(100);
+
+                return model;
+            }
+
+            @Override
+            protected void process(List<Integer> chunks) {
+                int last = chunks.get(chunks.size() - 1);
+                jProgressBar1.setValue(last);
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    DefaultTableModel model = get();
+                    if (model != null) {
+                        jTable1.setModel(model);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    jProgressBar1.setVisible(false);
+                    jButton1.setEnabled(true);
+                }
+            }
+        };
+
+// Inicio
+        jProgressBar1.setVisible(true);
+        jProgressBar1.setValue(0);
+        jButton1.setEnabled(false);
+        worker.execute();
+
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -133,7 +224,7 @@ public class main extends javax.swing.JFrame {
 
         //PanelPrincipal.setLayout(BorderLayout);
         Principal.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        PanelPrincipal.setSize(Principal.getX(),Principal.getY());
+        PanelPrincipal.setSize(Principal.getX(), Principal.getY());
 
         Principal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Principal.setLocationRelativeTo(null);
@@ -184,10 +275,19 @@ public class main extends javax.swing.JFrame {
     private javax.swing.JFrame Principal;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 //Variables globales
+    Connection conn = null;
     SQLManagement gestor = new SQLManagement();
+
+    public interface ProgresoCallback {
+
+        void onProgreso(int progreso);
+    }
 }
