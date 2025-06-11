@@ -1,0 +1,346 @@
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.table.DefaultTableModel;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+/**
+ *
+ * @author Osmin Tovar
+ */
+public class SQLManagement {
+
+    public Connection conect() {
+        return Conexion.conectorcito();  // nueva forma de conectar
+    }
+
+    public SQLManagement() {
+    }
+
+    public DefaultTableModel  VentasPorMesSinFiltroLlantas() {
+        Connection conn = Conexion.conectorcito();
+        DefaultTableModel model = new DefaultTableModel();
+
+        if (conn != null) {
+            try {
+                String consulta = "/* VENTAS DE LOS ULTIMOS 12 MESES*/\n"
+                        + "SET NOCOUNT ON;\n"
+                        + "DECLARE @ItemCode as nvarchar(40)\n"
+                        + "DECLARE @Vta1 as float\n"
+                        + "DECLARE @Vta2 as float\n"
+                        + "DECLARE @Vta3 as float\n"
+                        + "DECLARE @Vta4 as float\n"
+                        + "DECLARE @Vta5 as float\n"
+                        + "DECLARE @Vta6 as float\n"
+                        + "DECLARE @Vta7 as float\n"
+                        + "DECLARE @Vta8 as float\n"
+                        + "DECLARE @Vta9 as float\n"
+                        + "DECLARE @Vta10 as float\n"
+                        + "DECLARE @Vta11 as float\n"
+                        + "DECLARE @Vta12 as float\n"
+                        + "\n"
+                        + "DECLARE @TempTable TABLE\n"
+                        + "(\n"
+                        + "ItemCode nvarchar(40),\n"
+                        + "Vta1 float,\n"
+                        + "Vta2 float,\n"
+                        + "Vta3 float,\n"
+                        + "Vta4 float,\n"
+                        + "Vta5 float, \n"
+                        + "Vta6 float,\n"
+                        + "Vta7 float,\n"
+                        + "Vta8 float,\n"
+                        + "Vta9 float,\n"
+                        + "Vta10 float,\n"
+                        + "Vta11 float,\n"
+                        + "Vta12 float)\n"
+                        + "\n"
+                        + "INSERT @TempTable (ItemCode)\n"
+                        + "SELECT ItemCode \n"
+                        + "FROM OITM\n"
+                        + "WHERE [ItmsGrpCod] = 110\n"
+                        + "AND ValidFor = 'Y'\n"
+                        + "\n"
+                        + "DECLARE Saldo CURSOR FOR\n"
+                        + "SELECT T0.ItemCode, T0.Vta1, T0.Vta2, T0.Vta3, T0.Vta4, T0.Vta5, T0.Vta6, T0.Vta7, T0.Vta8, T0.Vta9, T0.Vta10, T0.Vta11, T0.Vta12\n"
+                        + "FROM @TempTable T0\n"
+                        + "\n"
+                        + "OPEN Saldo\n"
+                        + "FETCH NEXT FROM Saldo\n"
+                        + "INTO @ItemCode, @Vta1, @Vta2, @Vta3, @Vta4, @Vta5, @Vta6, @Vta7, @Vta8, @Vta9, @Vta10, @Vta11, @Vta12\n"
+                        + "WHILE @@FETCH_STATUS = 0\n"
+                        + "BEGIN\n"
+                        + "		UPDATE @TempTable\n"
+                        + "		SET Vta1 = (SELECT SUM(Cantidad)\n"
+                        + "			FROM \n"
+                        + "				(SELECT INV1.Quantity as Cantidad\n"
+                        + "				FROM INV1 \n"
+                        + "					INNER JOIN OINV ON INV1.DocEntry = OINV.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, OINV.DocDate, GETDATE()) = 1\n"
+                        + "					AND OINV.Canceled = 'N'\n"
+                        + "					AND INV1.ItemCode = @ItemCode\n"
+                        + "				UNION ALL\n"
+                        + "				SELECT RIN1.Quantity*-1\n"
+                        + "				FROM RIN1 INNER JOIN ORIN ON RIN1.DocEntry = ORIN.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, ORIN.DocDate, GETDATE()) = 1\n"
+                        + "					AND ORIN.Canceled = 'N'\n"
+                        + "					AND RIN1.ItemCode = @ItemCode) Ventas)\n"
+                        + ", Vta2 = (SELECT SUM(Cantidad)\n"
+                        + "			FROM \n"
+                        + "				(SELECT INV1.Quantity as Cantidad\n"
+                        + "				FROM INV1 \n"
+                        + "					INNER JOIN OINV ON INV1.DocEntry = OINV.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, OINV.DocDate, GETDATE()) = 2\n"
+                        + "					AND OINV.Canceled = 'N'\n"
+                        + "					AND INV1.ItemCode = @ItemCode\n"
+                        + "				UNION ALL\n"
+                        + "				SELECT RIN1.Quantity*-1\n"
+                        + "				FROM RIN1 INNER JOIN ORIN ON RIN1.DocEntry = ORIN.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, ORIN.DocDate, GETDATE()) = 2\n"
+                        + "					AND ORIN.Canceled = 'N'\n"
+                        + "					AND RIN1.ItemCode = @ItemCode) Ventas)\n"
+                        + ", Vta3 = (SELECT SUM(Cantidad)\n"
+                        + "			FROM \n"
+                        + "				(SELECT INV1.Quantity as Cantidad\n"
+                        + "				FROM INV1 \n"
+                        + "					INNER JOIN OINV ON INV1.DocEntry = OINV.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, OINV.DocDate, GETDATE()) = 3\n"
+                        + "					AND OINV.Canceled = 'N'\n"
+                        + "					AND INV1.ItemCode = @ItemCode\n"
+                        + "				UNION ALL\n"
+                        + "				SELECT RIN1.Quantity*-1\n"
+                        + "				FROM RIN1 INNER JOIN ORIN ON RIN1.DocEntry = ORIN.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, ORIN.DocDate, GETDATE()) = 3\n"
+                        + "					AND ORIN.Canceled = 'N'\n"
+                        + "					AND RIN1.ItemCode = @ItemCode) Ventas)\n"
+                        + ", Vta4 = (SELECT SUM(Cantidad)\n"
+                        + "			FROM \n"
+                        + "				(SELECT INV1.Quantity as Cantidad\n"
+                        + "				FROM INV1 \n"
+                        + "					INNER JOIN OINV ON INV1.DocEntry = OINV.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, OINV.DocDate, GETDATE()) = 4\n"
+                        + "					AND OINV.Canceled = 'N'\n"
+                        + "					AND INV1.ItemCode = @ItemCode\n"
+                        + "				UNION ALL\n"
+                        + "				SELECT RIN1.Quantity*-1\n"
+                        + "				FROM RIN1 INNER JOIN ORIN ON RIN1.DocEntry = ORIN.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, ORIN.DocDate, GETDATE()) = 4\n"
+                        + "					AND ORIN.Canceled = 'N'\n"
+                        + "					AND RIN1.ItemCode = @ItemCode) Ventas)\n"
+                        + ", Vta5 = (SELECT SUM(Cantidad)\n"
+                        + "			FROM \n"
+                        + "				(SELECT INV1.Quantity as Cantidad\n"
+                        + "				FROM INV1 \n"
+                        + "					INNER JOIN OINV ON INV1.DocEntry = OINV.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, OINV.DocDate, GETDATE()) = 5\n"
+                        + "					AND OINV.Canceled = 'N'\n"
+                        + "					AND INV1.ItemCode = @ItemCode\n"
+                        + "				UNION ALL\n"
+                        + "				SELECT RIN1.Quantity*-1\n"
+                        + "				FROM RIN1 INNER JOIN ORIN ON RIN1.DocEntry = ORIN.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, ORIN.DocDate, GETDATE()) = 5\n"
+                        + "					AND ORIN.Canceled = 'N'\n"
+                        + "					AND RIN1.ItemCode = @ItemCode) Ventas)\n"
+                        + ", Vta6 = (SELECT SUM(Cantidad)\n"
+                        + "			FROM \n"
+                        + "				(SELECT INV1.Quantity as Cantidad\n"
+                        + "				FROM INV1 \n"
+                        + "					INNER JOIN OINV ON INV1.DocEntry = OINV.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, OINV.DocDate, GETDATE()) = 6\n"
+                        + "					AND OINV.Canceled = 'N'\n"
+                        + "					AND INV1.ItemCode = @ItemCode\n"
+                        + "				UNION ALL\n"
+                        + "				SELECT RIN1.Quantity*-1\n"
+                        + "				FROM RIN1 INNER JOIN ORIN ON RIN1.DocEntry = ORIN.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, ORIN.DocDate, GETDATE()) = 6\n"
+                        + "					AND ORIN.Canceled = 'N'\n"
+                        + "					AND RIN1.ItemCode = @ItemCode) Ventas)\n"
+                        + ", Vta7 = (SELECT SUM(Cantidad)\n"
+                        + "			FROM \n"
+                        + "				(SELECT INV1.Quantity as Cantidad\n"
+                        + "				FROM INV1 \n"
+                        + "					INNER JOIN OINV ON INV1.DocEntry = OINV.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, OINV.DocDate, GETDATE()) = 7\n"
+                        + "					AND OINV.Canceled = 'N'\n"
+                        + "					AND INV1.ItemCode = @ItemCode\n"
+                        + "				UNION ALL\n"
+                        + "				SELECT RIN1.Quantity*-1\n"
+                        + "				FROM RIN1 INNER JOIN ORIN ON RIN1.DocEntry = ORIN.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, ORIN.DocDate, GETDATE()) = 7\n"
+                        + "					AND ORIN.Canceled = 'N'\n"
+                        + "					AND RIN1.ItemCode = @ItemCode) Ventas)\n"
+                        + ", Vta8 = (SELECT SUM(Cantidad)\n"
+                        + "			FROM \n"
+                        + "				(SELECT INV1.Quantity as Cantidad\n"
+                        + "				FROM INV1 \n"
+                        + "					INNER JOIN OINV ON INV1.DocEntry = OINV.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, OINV.DocDate, GETDATE()) = 8\n"
+                        + "					AND OINV.Canceled = 'N'\n"
+                        + "					AND INV1.ItemCode = @ItemCode\n"
+                        + "				UNION ALL\n"
+                        + "				SELECT RIN1.Quantity*-1\n"
+                        + "				FROM RIN1 INNER JOIN ORIN ON RIN1.DocEntry = ORIN.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, ORIN.DocDate, GETDATE()) = 8\n"
+                        + "					AND ORIN.Canceled = 'N'\n"
+                        + "					AND RIN1.ItemCode = @ItemCode) Ventas)\n"
+                        + ", Vta9 = (SELECT SUM(Cantidad)\n"
+                        + "			FROM \n"
+                        + "				(SELECT INV1.Quantity as Cantidad\n"
+                        + "				FROM INV1 \n"
+                        + "					INNER JOIN OINV ON INV1.DocEntry = OINV.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, OINV.DocDate, GETDATE()) = 9\n"
+                        + "					AND OINV.Canceled = 'N'\n"
+                        + "					AND INV1.ItemCode = @ItemCode\n"
+                        + "				UNION ALL\n"
+                        + "				SELECT RIN1.Quantity*-1\n"
+                        + "				FROM RIN1 INNER JOIN ORIN ON RIN1.DocEntry = ORIN.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, ORIN.DocDate, GETDATE()) = 9\n"
+                        + "					AND ORIN.Canceled = 'N'\n"
+                        + "					AND RIN1.ItemCode = @ItemCode) Ventas)\n"
+                        + ", Vta10 = (SELECT SUM(Cantidad)\n"
+                        + "			FROM \n"
+                        + "				(SELECT INV1.Quantity as Cantidad\n"
+                        + "				FROM INV1 \n"
+                        + "					INNER JOIN OINV ON INV1.DocEntry = OINV.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, OINV.DocDate, GETDATE()) = 10\n"
+                        + "					AND OINV.Canceled = 'N'\n"
+                        + "					AND INV1.ItemCode = @ItemCode\n"
+                        + "				UNION ALL\n"
+                        + "				SELECT RIN1.Quantity*-1\n"
+                        + "				FROM RIN1 INNER JOIN ORIN ON RIN1.DocEntry = ORIN.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, ORIN.DocDate, GETDATE()) = 10\n"
+                        + "					AND ORIN.Canceled = 'N'\n"
+                        + "					AND RIN1.ItemCode = @ItemCode) Ventas)\n"
+                        + ", Vta11 = (SELECT SUM(Cantidad)\n"
+                        + "			FROM \n"
+                        + "				(SELECT INV1.Quantity as Cantidad\n"
+                        + "				FROM INV1 \n"
+                        + "					INNER JOIN OINV ON INV1.DocEntry = OINV.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, OINV.DocDate, GETDATE()) = 11\n"
+                        + "					AND OINV.Canceled = 'N'\n"
+                        + "					AND INV1.ItemCode = @ItemCode\n"
+                        + "				UNION ALL\n"
+                        + "				SELECT RIN1.Quantity*-1\n"
+                        + "				FROM RIN1 INNER JOIN ORIN ON RIN1.DocEntry = ORIN.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, ORIN.DocDate, GETDATE()) = 11\n"
+                        + "					AND ORIN.Canceled = 'N'\n"
+                        + "					AND RIN1.ItemCode = @ItemCode) Ventas)\n"
+                        + ", Vta12 = (SELECT SUM(Cantidad)\n"
+                        + "			FROM \n"
+                        + "				(SELECT INV1.Quantity as Cantidad\n"
+                        + "				FROM INV1 \n"
+                        + "					INNER JOIN OINV ON INV1.DocEntry = OINV.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, OINV.DocDate, GETDATE()) = 12\n"
+                        + "					AND OINV.Canceled = 'N'\n"
+                        + "					AND INV1.ItemCode = @ItemCode\n"
+                        + "				UNION ALL\n"
+                        + "				SELECT RIN1.Quantity*-1\n"
+                        + "				FROM RIN1 INNER JOIN ORIN ON RIN1.DocEntry = ORIN.DocEntry\n"
+                        + "				WHERE DATEDIFF(month, ORIN.DocDate, GETDATE()) = 12\n"
+                        + "					AND ORIN.Canceled = 'N'\n"
+                        + "					AND RIN1.ItemCode = @ItemCode) Ventas)\n"
+                        + "\n"
+                        + "WHERE ItemCode = @ItemCode\n"
+                        + "FETCH NEXT FROM Saldo\n"
+                        + "INTO @ItemCode, @Vta1, @Vta2, @Vta3, @Vta4, @Vta5, @Vta6, @Vta7, @Vta8, @Vta9, @Vta10, @Vta11, @Vta12 \n"
+                        + "END\n"
+                        + "CLOSE Saldo\n"
+                        + "DEALLOCATE Saldo\n"
+                        + "\n"
+                        + "/************************************************************************************/\n"
+                        + "declare @GroupCode as NVARCHAR(150)\n"
+                        + "set @GroupCode = 110\n"
+                        + "\n"
+                        + "SELECT T0.[ItemCode]\n"
+                        + "	, T0.[ItemName]\n"
+                        + "	, T0.[SuppCatNum] as 'No. Fabricante'\n"
+                        + "	, T0.[OnHand]\n"
+                        + "	, T0.[IsCommited]\n"
+                        + "	, T0.[OnOrder]\n"
+                        + "	, ISNULL((SELECT sum(T1.[Quantity]) \n"
+                        + "	  FROM OPQT OFERTA INNER JOIN PQT1 T1 ON OFERTA.DocEntry = T1.DocEntry \n"
+                        + "	  WHERE T1.[LineStatus] = 'O' AND T1.ItemCode=T0.ItemCode GROUP BY T1.[ItemCode]), 0.0) as [Pedido]\n"
+                        + "	,  ISNULL( T0.[OnHand]+ T0.[OnOrder]-T0.[IsCommited] + ISNULL(ISNULL((SELECT sum(T1.[Quantity]) \n"
+                        + "	  FROM OPQT OFERTA INNER JOIN PQT1 T1 ON OFERTA.DocEntry = T1.DocEntry \n"
+                        + "	  WHERE T1.[LineStatus] = 'O' AND T1.ItemCode=T0.ItemCode GROUP BY T1.[ItemCode]), 0.0), 0.0), 0.0) [Total]\n"
+                        + "	, isnull((SELECT Vta12 FROM @Temptable WHERE ItemCode = T0.ItemCode),null) AS '1'\n"
+                        + "	, isnull((SELECT Vta11 FROM @Temptable WHERE ItemCode = T0.ItemCode),null) AS '2'\n"
+                        + "	, isnull((SELECT Vta10 FROM @Temptable WHERE ItemCode = T0.ItemCode),null) AS '3'\n"
+                        + "	, isnull((SELECT Vta9 FROM @Temptable WHERE ItemCode = T0.ItemCode),null) AS '4'\n"
+                        + "	, isnull((SELECT Vta8 FROM @Temptable WHERE ItemCode = T0.ItemCode),null) AS '5'\n"
+                        + "	, isnull((SELECT Vta7 FROM @Temptable WHERE ItemCode = T0.ItemCode),null) AS '6'\n"
+                        + "	, isnull((SELECT Vta6 FROM @Temptable WHERE ItemCode = T0.ItemCode),null) AS '7'\n"
+                        + "	, isnull((SELECT Vta5 FROM @Temptable WHERE ItemCode = T0.ItemCode),null) AS '8'\n"
+                        + "	, isnull((SELECT Vta4 FROM @Temptable WHERE ItemCode = T0.ItemCode),null) AS '9'\n"
+                        + "	, isnull((SELECT Vta3 FROM @Temptable WHERE ItemCode = T0.ItemCode),null) AS '10'\n"
+                        + "	, isnull((SELECT Vta2 FROM @Temptable WHERE ItemCode = T0.ItemCode),null) AS '11'\n"
+                        + "	, isnull((SELECT Vta1 FROM @Temptable WHERE ItemCode = T0.ItemCode),null) AS '12'\n"
+                        + "	, ((isnull((SELECT Vta12 FROM @Temptable WHERE ItemCode = T0.ItemCode),0) +\n"
+                        + "	 isnull((SELECT Vta11 FROM @Temptable WHERE ItemCode = T0.ItemCode),0) +\n"
+                        + "	 isnull((SELECT Vta10 FROM @Temptable WHERE ItemCode = T0.ItemCode),0) +\n"
+                        + "	 isnull((SELECT Vta9 FROM @Temptable WHERE ItemCode = T0.ItemCode),0) +\n"
+                        + "	 isnull((SELECT Vta8 FROM @Temptable WHERE ItemCode = T0.ItemCode),0) +\n"
+                        + "	 isnull((SELECT Vta7 FROM @Temptable WHERE ItemCode = T0.ItemCode),0) +\n"
+                        + "	 isnull((SELECT Vta6 FROM @Temptable WHERE ItemCode = T0.ItemCode),0) +\n"
+                        + "	 isnull((SELECT Vta5 FROM @Temptable WHERE ItemCode = T0.ItemCode),0) +\n"
+                        + "	 isnull((SELECT Vta4 FROM @Temptable WHERE ItemCode = T0.ItemCode),0) +\n"
+                        + "	 isnull((SELECT Vta3 FROM @Temptable WHERE ItemCode = T0.ItemCode),0) +\n"
+                        + "	 isnull((SELECT Vta2 FROM @Temptable WHERE ItemCode = T0.ItemCode),0) +\n"
+                        + "	 isnull((SELECT Vta1 FROM @Temptable WHERE ItemCode = T0.ItemCode),0))/12 )  [Promedio Mensual]\n"
+                        + "FROM OITM T0, OITB T1\n"
+                        + "WHERE T0.ItmsGrpCod = T1.ItmsGrpCod\n"
+                        + "AND T1.ItmsGrpCod = 110\n"
+                        + "AND T0.[validFor] = 'Y'";
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(consulta);
+
+                int columnas = rs.getMetaData().getColumnCount();
+
+                // Imprimir nombres de columnas
+                for (int i = 1; i <= columnas; i++) {
+                model.addColumn(rs.getMetaData().getColumnName(i));
+            }
+
+            // Agregar filas al modelo
+            while (rs.next()) {
+                Object[] fila = new Object[columnas];
+                for (int i = 0; i < columnas; i++) {
+                    fila[i] = rs.getObject(i + 1);
+                }
+                model.addRow(fila);
+            }
+
+            rs.close();
+            stmt.close();
+            conn.close();
+
+
+                // Cerrar recursos
+                rs.close();
+                stmt.close();
+                conn.close();
+
+            } catch (Exception e) {
+                System.out.println("❌ Error al realizar la consulta: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("⚠️ No se pudo establecer conexión con la base de datos.");
+        }
+        return model;
+    }
+}
