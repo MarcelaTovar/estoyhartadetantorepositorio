@@ -57,6 +57,7 @@ public class main extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         botonVentasMarca = new javax.swing.JButton();
         jProgressBar1 = new javax.swing.JProgressBar();
+        jButton1 = new javax.swing.JButton();
         AnalisisMesAceites = new javax.swing.JFrame();
         PanelPrincipal1 = new javax.swing.JPanel();
         botonVentasMes1 = new javax.swing.JButton();
@@ -119,6 +120,15 @@ public class main extends javax.swing.JFrame {
         botonVentasMarca.setBounds(260, 40, 120, 40);
         PanelPrincipal.add(jProgressBar1);
         jProgressBar1.setBounds(390, 40, 146, 40);
+
+        jButton1.setText("Exportar A Excel");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
+        PanelPrincipal.add(jButton1);
+        jButton1.setBounds(550, 40, 120, 40);
 
         javax.swing.GroupLayout AnalisisMesLlantasLayout = new javax.swing.GroupLayout(AnalisisMesLlantas.getContentPane());
         AnalisisMesLlantas.getContentPane().setLayout(AnalisisMesLlantasLayout);
@@ -604,6 +614,22 @@ public class main extends javax.swing.JFrame {
         AnalisisMesAceites.setVisible(true);
     }//GEN-LAST:event_botonVentaMesMarcaAceitesMouseClicked
 
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+        // TODO add your handling code here:
+        int opcion = JOptionPane.showConfirmDialog(
+                null,
+                "Esta el excel exportado con filtro?",
+                "Exportacion a Excel",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+        if (opcion == JOptionPane.YES_OPTION) {
+            exportar.exportar(jTable1, "Exportacion con filtro por marca");
+        }else  {
+            exportar.exportar(jTable1, "Exportacion sin filtros");
+        }
+    }//GEN-LAST:event_jButton1MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -653,6 +679,7 @@ public class main extends javax.swing.JFrame {
     private javax.swing.JButton botonVentasMarca1;
     private javax.swing.JButton botonVentasMes;
     private javax.swing.JButton botonVentasMes1;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
@@ -666,7 +693,8 @@ public class main extends javax.swing.JFrame {
 //Variables globales
     Connection conn = null;
     SQLManagement gestor = new SQLManagement();
-
+    ExportarAExcel exportar = new ExportarAExcel();
+    
     public interface ProgresoCallback {
 
         void onProgreso(int progreso);
