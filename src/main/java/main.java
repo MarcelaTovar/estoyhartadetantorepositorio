@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
@@ -27,6 +28,17 @@ public class main extends javax.swing.JFrame {
      */
     public main() {
         initComponents();
+        
+         gestor = new SQLManagement();
+         conn = gestor.conect();
+         if (conn != null) {
+            JOptionPane.showMessageDialog(null,
+                        "✅ Conexión exitosa a la base de datos", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        }else  {
+            JOptionPane.showMessageDialog(null,
+                        " Conexión fallida a la base de datos", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
     }
 
     /**
@@ -38,37 +50,48 @@ public class main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        Principal = new javax.swing.JFrame();
+        AnalisisMesLlantas = new javax.swing.JFrame();
         PanelPrincipal = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        botonVentasMes = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton2 = new javax.swing.JButton();
+        botonVentasMarca = new javax.swing.JButton();
         jProgressBar1 = new javax.swing.JProgressBar();
+        AnalisisMesAceites = new javax.swing.JFrame();
+        PanelPrincipal1 = new javax.swing.JPanel();
+        botonVentasMes1 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tablaVentasMesAceites = new javax.swing.JTable();
+        botonVentasMarca1 = new javax.swing.JButton();
+        progressVentasMesAceites = new javax.swing.JProgressBar();
+        Principal = new javax.swing.JFrame();
+        PanelInicial = new javax.swing.JPanel();
+        botonVentaMesMarcaAceites = new javax.swing.JButton();
+        botonVentaMesAceites = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         Iniciar = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
-        Principal.setPreferredSize(new java.awt.Dimension(1047, 540));
+        AnalisisMesLlantas.setPreferredSize(new java.awt.Dimension(1047, 540));
 
         PanelPrincipal.setBackground(new java.awt.Color(255, 250, 224));
         PanelPrincipal.setPreferredSize(new java.awt.Dimension(1047, 540));
         PanelPrincipal.setLayout(null);
 
-        jButton1.setText("Analisis de Ventas por Mes");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+        botonVentasMes.setText("Analisis de Ventas por Mes");
+        botonVentasMes.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
+                botonVentasMesMouseClicked(evt);
             }
         });
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        botonVentasMes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                botonVentasMesActionPerformed(evt);
             }
         });
-        PanelPrincipal.add(jButton1);
-        jButton1.setBounds(30, 40, 220, 43);
+        PanelPrincipal.add(botonVentasMes);
+        botonVentasMes.setBounds(30, 40, 220, 43);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -86,21 +109,117 @@ public class main extends javax.swing.JFrame {
         PanelPrincipal.add(jScrollPane1);
         jScrollPane1.setBounds(30, 90, 1220, 560);
 
-        jButton2.setText("Filtrar Por Marca");
-        PanelPrincipal.add(jButton2);
-        jButton2.setBounds(260, 40, 120, 40);
+        botonVentasMarca.setText("Filtrar Por Marca");
+        botonVentasMarca.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                botonVentasMarcaMouseClicked(evt);
+            }
+        });
+        PanelPrincipal.add(botonVentasMarca);
+        botonVentasMarca.setBounds(260, 40, 120, 40);
         PanelPrincipal.add(jProgressBar1);
         jProgressBar1.setBounds(390, 40, 146, 40);
+
+        javax.swing.GroupLayout AnalisisMesLlantasLayout = new javax.swing.GroupLayout(AnalisisMesLlantas.getContentPane());
+        AnalisisMesLlantas.getContentPane().setLayout(AnalisisMesLlantasLayout);
+        AnalisisMesLlantasLayout.setHorizontalGroup(
+            AnalisisMesLlantasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(PanelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        AnalisisMesLlantasLayout.setVerticalGroup(
+            AnalisisMesLlantasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(PanelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        PanelPrincipal1.setBackground(new java.awt.Color(255, 250, 224));
+        PanelPrincipal1.setPreferredSize(new java.awt.Dimension(1047, 540));
+        PanelPrincipal1.setLayout(null);
+
+        botonVentasMes1.setText("Analisis de Ventas por Mes");
+        botonVentasMes1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                botonVentasMes1MouseClicked(evt);
+            }
+        });
+        botonVentasMes1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonVentasMes1ActionPerformed(evt);
+            }
+        });
+        PanelPrincipal1.add(botonVentasMes1);
+        botonVentasMes1.setBounds(30, 40, 220, 43);
+
+        tablaVentasMesAceites.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(tablaVentasMesAceites);
+
+        PanelPrincipal1.add(jScrollPane2);
+        jScrollPane2.setBounds(30, 90, 1220, 560);
+
+        botonVentasMarca1.setText("Filtrar Por Marca");
+        botonVentasMarca1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                botonVentasMarca1MouseClicked(evt);
+            }
+        });
+        PanelPrincipal1.add(botonVentasMarca1);
+        botonVentasMarca1.setBounds(260, 40, 120, 40);
+        PanelPrincipal1.add(progressVentasMesAceites);
+        progressVentasMesAceites.setBounds(390, 40, 146, 40);
+
+        javax.swing.GroupLayout AnalisisMesAceitesLayout = new javax.swing.GroupLayout(AnalisisMesAceites.getContentPane());
+        AnalisisMesAceites.getContentPane().setLayout(AnalisisMesAceitesLayout);
+        AnalisisMesAceitesLayout.setHorizontalGroup(
+            AnalisisMesAceitesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(PanelPrincipal1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        AnalisisMesAceitesLayout.setVerticalGroup(
+            AnalisisMesAceitesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(PanelPrincipal1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        PanelInicial.setLayout(null);
+
+        botonVentaMesMarcaAceites.setText("Analisis Por Mes Aceites");
+        botonVentaMesMarcaAceites.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                botonVentaMesMarcaAceitesMouseClicked(evt);
+            }
+        });
+        PanelInicial.add(botonVentaMesMarcaAceites);
+        botonVentaMesMarcaAceites.setBounds(220, 10, 180, 40);
+
+        botonVentaMesAceites.setText("Analisis Por Mes Llantas");
+        botonVentaMesAceites.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                botonVentaMesAceitesMouseClicked(evt);
+            }
+        });
+        PanelInicial.add(botonVentaMesAceites);
+        botonVentaMesAceites.setBounds(30, 10, 180, 40);
 
         javax.swing.GroupLayout PrincipalLayout = new javax.swing.GroupLayout(Principal.getContentPane());
         Principal.getContentPane().setLayout(PrincipalLayout);
         PrincipalLayout.setHorizontalGroup(
             PrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(PanelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(PrincipalLayout.createSequentialGroup()
+                .addComponent(PanelInicial, javax.swing.GroupLayout.PREFERRED_SIZE, 844, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         PrincipalLayout.setVerticalGroup(
             PrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(PanelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(PrincipalLayout.createSequentialGroup()
+                .addComponent(PanelInicial, javax.swing.GroupLayout.PREFERRED_SIZE, 481, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -141,7 +260,27 @@ public class main extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+    private void IniciarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_IniciarMouseClicked
+        // TODO add your handling code here:
+        this.setVisible(false);
+
+        //PanelPrincipal.setLayout(BorderLayout);
+        Principal.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        PanelInicial.setSize(Principal.getX(), Principal.getY());
+
+        Principal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Principal.setLocationRelativeTo(null);
+
+        Principal.add(PanelInicial);
+        Principal.setVisible(true);
+
+    }//GEN-LAST:event_IniciarMouseClicked
+
+    private void botonVentasMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVentasMesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botonVentasMesActionPerformed
+
+    private void botonVentasMesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonVentasMesMouseClicked
         SwingWorker<DefaultTableModel, Integer> worker = new SwingWorker<DefaultTableModel, Integer>() {
             @Override
             protected DefaultTableModel doInBackground() throws Exception {
@@ -165,13 +304,13 @@ public class main extends javax.swing.JFrame {
                 progressThread.start();
 
                 // Aquí haces la conexión y la consulta real
-                gestor = new SQLManagement();
-                conn = gestor.conect();
+               
+                
 
                 DefaultTableModel model = null;
                 if (conn != null) {
                     model = gestor.VentasPorMesSinFiltroLlantas(conn);
-                    conn.close();
+                    
                 }
 
                 // Termina el hilo del progreso
@@ -201,38 +340,269 @@ public class main extends javax.swing.JFrame {
                     e.printStackTrace();
                 } finally {
                     jProgressBar1.setVisible(false);
-                    jButton1.setEnabled(true);
+                    botonVentasMes.setEnabled(true);
                 }
             }
         };
 
-// Inicio
+        // Inicio
         jProgressBar1.setVisible(true);
         jProgressBar1.setValue(0);
-        jButton1.setEnabled(false);
+        botonVentasMes.setEnabled(false);
         worker.execute();
+    }//GEN-LAST:event_botonVentasMesMouseClicked
 
-    }//GEN-LAST:event_jButton1MouseClicked
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void botonVentasMarcaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonVentasMarcaMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+        String input = JOptionPane.showInputDialog(null, "Por favor, ingresa la marca:");
+         SwingWorker<DefaultTableModel, Integer> worker = new SwingWorker<DefaultTableModel, Integer>() {
+            @Override
+            protected DefaultTableModel doInBackground() throws Exception {
+                // Hilo para simular progreso
+                Thread progressThread = new Thread(() -> {
+                    try {
+                        int progreso = 0;
+                        while (!Thread.currentThread().isInterrupted()) {
+                            publish(progreso);
+                            progreso += 1;
+                            if (progreso > 100) {
+                                progreso = 0;  // Si quieres que la barra se reinicie
+                            }
+                            Thread.sleep(100); // cada 100 ms
+                        }
+                    } catch (InterruptedException e) {
+                        // Thread interrumpido, salir
+                    }
+                });
 
-    private void IniciarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_IniciarMouseClicked
+                progressThread.start();
+
+                // Aquí haces la conexión y la consulta real
+              
+                
+
+                DefaultTableModel model = null;
+                if (conn != null) {
+                    model = gestor.VentasPorMesFiltroLlantasMarca(conn,input);
+                    
+                }
+
+                // Termina el hilo del progreso
+                progressThread.interrupt();
+                progressThread.join();
+
+                // Asegura que la barra quede llena al 100% al terminar
+                publish(100);
+
+                return model;
+            }
+
+            @Override
+            protected void process(List<Integer> chunks) {
+                int last = chunks.get(chunks.size() - 1);
+                jProgressBar1.setValue(last);
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    DefaultTableModel model = get();
+                    if (model != null) {
+                        jTable1.setModel(model);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    jProgressBar1.setVisible(false);
+                    botonVentasMes.setEnabled(true);
+                }
+            }
+        };
+
+        // Inicio
+        jProgressBar1.setVisible(true);
+        jProgressBar1.setValue(0);
+        botonVentasMes.setEnabled(false);
+        botonVentasMes.setEnabled(false);
+        worker.execute();
+    }//GEN-LAST:event_botonVentasMarcaMouseClicked
+
+    private void botonVentasMes1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonVentasMes1MouseClicked
         // TODO add your handling code here:
-        this.setVisible(false);
+        SwingWorker<DefaultTableModel, Integer> worker = new SwingWorker<DefaultTableModel, Integer>() {
+            @Override
+            protected DefaultTableModel doInBackground() throws Exception {
+                // Hilo para simular progreso
+                Thread progressThread = new Thread(() -> {
+                    try {
+                        int progreso = 0;
+                        while (!Thread.currentThread().isInterrupted()) {
+                            publish(progreso);
+                            progreso += 1;
+                            if (progreso > 100) {
+                                progreso = 0;  // Si quieres que la barra se reinicie
+                            }
+                            Thread.sleep(100); // cada 100 ms
+                        }
+                    } catch (InterruptedException e) {
+                        // Thread interrumpido, salir
+                    }
+                });
 
-        //PanelPrincipal.setLayout(BorderLayout);
-        Principal.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        PanelPrincipal.setSize(Principal.getX(), Principal.getY());
+                progressThread.start();
 
-        Principal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Principal.setLocationRelativeTo(null);
+                // Aquí haces la conexión y la consulta real
+               
+               
 
-        Principal.add(PanelPrincipal);
-        Principal.setVisible(true);
+                DefaultTableModel model = null;
+                if (conn != null) {
+                    model = gestor.VentasPorMesSinFiltroAceites(conn);
+                 
+                }
 
-    }//GEN-LAST:event_IniciarMouseClicked
+                // Termina el hilo del progreso
+                progressThread.interrupt();
+                progressThread.join();
+
+                // Asegura que la barra quede llena al 100% al terminar
+                publish(100);
+
+                return model;
+            }
+
+            @Override
+            protected void process(List<Integer> chunks) {
+                int last = chunks.get(chunks.size() - 1);
+                progressVentasMesAceites.setValue(last);
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    DefaultTableModel model = get();
+                    if (model != null) {
+                        tablaVentasMesAceites.setModel(model);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    progressVentasMesAceites.setVisible(false);
+                    botonVentasMes.setEnabled(true);
+                }
+            }
+        };
+
+        // Inicio
+        progressVentasMesAceites.setVisible(true);
+        progressVentasMesAceites.setValue(0);
+        botonVentasMes1.setEnabled(false);
+        botonVentasMarca1.setEnabled(false);
+        worker.execute();
+    }//GEN-LAST:event_botonVentasMes1MouseClicked
+
+    private void botonVentasMes1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVentasMes1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botonVentasMes1ActionPerformed
+
+    private void botonVentasMarca1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonVentasMarca1MouseClicked
+        // TODO add your handling code here:
+         String input = JOptionPane.showInputDialog(null, "Por favor, ingresa la marca:");
+        
+        SwingWorker<DefaultTableModel, Integer> worker = new SwingWorker<DefaultTableModel, Integer>() {
+            @Override
+            protected DefaultTableModel doInBackground() throws Exception {
+                // Hilo para simular progreso
+                Thread progressThread = new Thread(() -> {
+                    try {
+                        int progreso = 0;
+                        while (!Thread.currentThread().isInterrupted()) {
+                            publish(progreso);
+                            progreso += 1;
+                            if (progreso > 100) {
+                                progreso = 0;  // Si quieres que la barra se reinicie
+                            }
+                            Thread.sleep(100); // cada 100 ms
+                        }
+                    } catch (InterruptedException e) {
+                        // Thread interrumpido, salir
+                    }
+                });
+
+                progressThread.start();
+
+                // Aquí haces la conexión y la consulta real
+               
+ 
+
+                DefaultTableModel model = null;
+                if (conn != null) {
+                    model = gestor.VentasPorMesConFiltroAceites(conn,input);
+                }
+
+                // Termina el hilo del progreso
+                progressThread.interrupt();
+                progressThread.join();
+
+                // Asegura que la barra quede llena al 100% al terminar
+                publish(100);
+
+                return model;
+            }
+
+            @Override
+            protected void process(List<Integer> chunks) {
+                int last = chunks.get(chunks.size() - 1);
+                progressVentasMesAceites.setValue(last);
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    DefaultTableModel model = get();
+                    if (model != null) {
+                        tablaVentasMesAceites.setModel(model);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    progressVentasMesAceites.setVisible(false);
+                    botonVentasMes.setEnabled(true);
+                }
+            }
+        };
+
+        // Inicio
+        progressVentasMesAceites.setVisible(true);
+        progressVentasMesAceites.setValue(0);
+        botonVentasMes1.setEnabled(false);
+        botonVentasMarca1.setEnabled(false);
+        worker.execute();
+    }//GEN-LAST:event_botonVentasMarca1MouseClicked
+
+    private void botonVentaMesAceitesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonVentaMesAceitesMouseClicked
+        // TODO add your handling code here:
+        AnalisisMesLlantas.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        PanelPrincipal.setSize(AnalisisMesLlantas.getX(), AnalisisMesLlantas.getY());
+
+        
+        AnalisisMesLlantas.setLocationRelativeTo(null);
+
+        AnalisisMesLlantas.add(PanelPrincipal);
+        AnalisisMesLlantas.setVisible(true);
+    }//GEN-LAST:event_botonVentaMesAceitesMouseClicked
+
+    private void botonVentaMesMarcaAceitesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonVentaMesMarcaAceitesMouseClicked
+        // TODO add your handling code here:
+        AnalisisMesAceites.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        PanelPrincipal1.setSize(AnalisisMesAceites.getX(), AnalisisMesAceites.getY());
+
+       
+        AnalisisMesAceites.setLocationRelativeTo(null);
+
+        AnalisisMesAceites.add(PanelPrincipal1);
+        AnalisisMesAceites.setVisible(true);
+    }//GEN-LAST:event_botonVentaMesMarcaAceitesMouseClicked
 
     /**
      * @param args the command line arguments
@@ -270,17 +640,28 @@ public class main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JFrame AnalisisMesAceites;
+    private javax.swing.JFrame AnalisisMesLlantas;
     private javax.swing.JButton Iniciar;
+    private javax.swing.JPanel PanelInicial;
     private javax.swing.JPanel PanelPrincipal;
+    private javax.swing.JPanel PanelPrincipal1;
     private javax.swing.JFrame Principal;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton botonVentaMesAceites;
+    private javax.swing.JButton botonVentaMesMarcaAceites;
+    private javax.swing.JButton botonVentasMarca;
+    private javax.swing.JButton botonVentasMarca1;
+    private javax.swing.JButton botonVentasMes;
+    private javax.swing.JButton botonVentasMes1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
+    private javax.swing.JProgressBar progressVentasMesAceites;
+    private javax.swing.JTable tablaVentasMesAceites;
     // End of variables declaration//GEN-END:variables
 //Variables globales
     Connection conn = null;

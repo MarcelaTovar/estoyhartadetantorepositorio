@@ -60,8 +60,7 @@ public class Conexion {
                 String URL = "jdbc:sqlserver://" + servidor + ":" + puerto + ";databaseName=" + nombreBase + ";encrypt=false";
 
                 Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-                JOptionPane.showMessageDialog(null,
-                        "✅ Conexión exitosa a la base de datos", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                
                 return conn;
             }
 
